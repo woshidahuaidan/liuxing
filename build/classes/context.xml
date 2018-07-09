@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
+		http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.3.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-4.3.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd
+		http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd">
+
+	<aop:aspectj-autoproxy/>
+	<context:component-scan base-package="com.city.car"/>
+	<tx:annotation-driven/>
+	
+	<!-- 
+	<bean id="sessionFactory" class="com.city.oa.factory.HibernateFactory" factory-method="getSessionFactory"></bean>
+	-->
+	<!-- 
+	<bean id="hibernateFactory" class="com.city.oa.factory.HibernateFactory" />
+	<bean id="sf" factory-bean="hibernateFactory" factory-method="createSessionFactory" />
+	
+
+	<bean id="departmentService" 
+	             class="com.city.oa.service.impl.DepartmentServiceImpl">
+	           
+	      <property  name="sf" ref="sessionFactory" />
+	      <property name="age" value="20"></property>      
+	              <constructor-arg  ref="sessionFactory" />
+	             
+	</bean>
+	   
+	<bean id="employeeService" 
+	             class="com.city.oa.service.impl.EmployeeServiceImpl">
+	             
+			 <propety  name="sf" ref="sessionFactory" />
+			 
+			 <constructor-arg ref="sessionFactory"  />
+	</bean>
+	
+	<bean id="serviceBeforeAdvice" class="com.city.oa.advice.ServiceBeforeAdvice" />
+    -->
+    <!-- 配置数据库连接池  内置驱动数据源
+    <bean id="ds01" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    	<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+    	<property name="url" value="jdbc:mysql://localhost:3306/cityerp" />
+    	<property name="username" value="root" />
+    	<property name="password" value="root" />
+	</bean>
+	-->
+	<!-- 使用JavaEE服务器配置的连接池，通过JNDI查找
+	<bean id="ds02" class="org.springframework.jndi.JndiObjectFactoryBean" >
+    	<property name="jndiName">
+		<value>java:comp/env/cityoa</value>
+     </property>
+	</bean>
+	 -->
+	  
+	<!-- 使用第3方连接池框架  C3P0-->
+	<bean id="ds03"  class="com.mchange.v2.c3p0.ComboPooledDataSource"  destroy-method="close">  
+	    <property name="driverClass" value="com.mysql.jdbc.Driver"></property>  
+	    <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/cityerp"></property>  
+	    <property name="user" value="root"></property>  
+	    <property name="password" value="root"></property>  
+	    <property name="acquireIncrement" value="2"></property>  
+	    <property name="initialPoolSize" value="1"></property>  
+	    <property name="maxPoolSize" value="2"></property>  
+	    <property name="minPoolSize" value="1"></property>  
+	    <property name="acquireRetryDelay" value="100"></property>  
+	    <property name="acquireRetryAttempts" value="10"></property>  
+	    <property name="breakAfterAcquireFailure" value="false"></property>  
+	</bean> 
+	<!-- 配置Hibernate SessionFactory工厂Bean -->
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="ds03"/>
+		
+		<property name="mappingDirectoryLocations">
+		   <list>
+		     <value>classpath:/com/city/car/model/</value>
+		     
+		   </list>
+		</property>
+		
+		
+		<property name="hibernateProperties">
+			<props>
+			<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+			<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- Spring 管理Hibernate事务的管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 配置Spring完成Hibernate事务的Advice 
+	<tx:advice id="txAdvice"  >
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" rollback-for="Exception"/>
+			
+			<tx:method name="*" rollback-for="Exception"/>
+		</tx:attributes>
+	</tx:advice>
+	-->
+	<!-- 将事务Adive与切入点结合 
+    <aop:config>
+	    <aop:pointcut id="serviceMethod" expression="execution(* com.city.oa.service.impl.*.*(..))"/>
+		<aop:advisor pointcut-ref="serviceMethod" advice-ref="txAdvice"/>
+	</aop:config>
+    -->
+    
+    
+    
+    
+	<!-- 声明切入点 
+	<aop:config>
+	    <aop:pointcut id="serviceMethod" expression="execution(* com.city.oa.service.impl.*.*(..))"/>
+		<aop:advisor pointcut-ref="serviceMethod" advice-ref="serviceBeforeAdvice"/>
+		<aop:advisor pointcut-ref="serviceMethod" advice-ref="serviceMethodAfterReturnAdvice"/>
+		<aop:advisor pointcut-ref="serviceMethod" advice-ref="serviceTransactionAdvice"/>
+	</aop:config>
+	-->
+	   
+	   
+
+
+</beans>

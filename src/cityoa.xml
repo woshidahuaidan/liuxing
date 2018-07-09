@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+   
+    <package name="base" namespace="/" extends="struts-default">
+       <interceptors>
+            <interceptor name="loginCheck" class="com.city.car.interceptor.LoginCheckInteceptor"/>
+            
+            <interceptor name="ipCheck" class="IPCheckInterceptor"/>
+            
+             <interceptor-stack name="cityoaStack">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="loginCheck"/>
+ 			</interceptor-stack>
+ 
+	   </interceptors>
+       
+        <default-interceptor-ref name="cityoaStack"/>
+        <global-results>
+           <result name="login" type="redirect">
+              <param name="location">/user/login.jsp</param>
+           </result>
+           <result name="error">/user/error.jsp</result>
+        </global-results>
+        
+        <global-exception-mappings>
+           	<exception-mapping exception="java.lang.Exception" result="error" />
+        </global-exception-mappings>
+        
+       
+    </package>
+
+    
+		<package name="login" namespace="/user" extends="base">
+		<action name="login" class="driverLoginController" method="login">
+			<result name="success" >/user/index.jsp</result>
+			<result name="error">/user/login.jsp</result>
+			<interceptor-ref name="defaultStack"/>
+			
+		</action>
+	</package>
+    
+	
+	<!-- 员工Action配置 -->
+	<package name="category" namespace="/category" extends="struts-default">
+	   		<action name="to*" class="cateegoryFrontController" method="to{1}"  >
+			
+			<result name="to{1}" type="dispatcher">/category/{1}.jsp</result>
+			<!-- 
+			<exception-mapping exception="java.lang.Exception" result="error"></exception-mapping>
+			 -->
+		</action>
+		
+		<action name="process*" class="categoryProcessController" method="{1}"  >
+			<result name="success" type="redirectAction">
+				<param name="namespace">/category</param>
+				<param name="actionName">tomain</param>
+			</result>
+		</action>
+	
+	</package>
+	
+	<package name="carinfo" namespace="/carinfo" extends="base">
+	   		<action name="to*" class="carinfoFrontController" method="to{1}"  >
+			
+			<result name="to{1}" type="dispatcher">/carinfo/{1}.jsp</result>
+			<!-- 
+			<exception-mapping exception="java.lang.Exception" result="error"></exception-mapping>
+			 -->
+		</action>
+		
+		<action name="process*" class="carinfoProcessController" method="{1}"  >
+			<result name="success" type="redirectAction">
+				<param name="namespace">/carinfo</param>
+				<param name="actionName">tomain</param>
+			</result>
+		</action>
+	
+	</package>
+	
+	<package name="driverinfo" namespace="/driverinfo" extends="base">
+	   		<action name="to*" class="driverFrontController" method="to{1}"  >
+			
+			<result name="to{1}" type="dispatcher">/driverinfo/{1}.jsp</result>
+			<!-- 
+			<exception-mapping exception="java.lang.Exception" result="error"></exception-mapping>
+			 -->
+		</action>
+		
+		<action name="process*" class="driverProcessController" method="{1}"  >
+			<result name="success" type="redirectAction">
+				<param name="namespace">/driverinfo</param>
+				<param name="actionName">tomain</param>
+			</result>
+		</action>
+		<action name="showphoto" class="driverShowPhotoController" method="show" >
+			<result name="show" type="stream">
+			    <param name="contentType">${dm.contextType}</param>
+			    <param name="inputName">InputStream</param>
+			    <param name="contentDisposition">attachment;filename=${dm.filename}</param>		
+			</result>	
+		</action>
+	</package>
+	
+	<package name="insurance" namespace="/insurance" extends="base">
+	   		<action name="to*" class="insuranceFrontController" method="to{1}"  >
+			
+			<result name="to{1}" type="dispatcher">/insurance/{1}.jsp</result>
+			<!-- 
+			<exception-mapping exception="java.lang.Exception" result="error"></exception-mapping>
+			 -->
+		</action>
+		
+		<action name="process*" class="insuranceProcessController" method="{1}"  >
+			<result name="success" type="redirectAction">
+				<param name="namespace">/insurance</param>
+				<param name="actionName">tomain</param>
+			</result>
+		</action>
+	
+	</package>
+	<package name="use" namespace="/use" extends="base">
+	   		<action name="to*" class="useCarFrontController" method="to{1}"  >
+			
+			<result name="to{1}" type="dispatcher">/use/{1}.jsp</result>
+			<!-- 
+			<exception-mapping exception="java.lang.Exception" result="error"></exception-mapping>
+			 -->
+		</action>
+		
+		<action name="process*" class="useCarProcessController" method="{1}"  >
+			<result name="success" type="redirectAction">
+				<param name="namespace">/use</param>
+				<param name="actionName">tomain</param>
+			</result>
+		</action>
+	
+	</package>
+	<package name="address" namespace="/address" extends="base">
+	   		<action name="to*" class="addressFrontController" method="to{1}"  >
+			
+			<result name="to{1}" type="dispatcher">/address/{1}.jsp</result>
+			<!-- 
+			<exception-mapping exception="java.lang.Exception" result="error"></exception-mapping>
+			 -->
+		</action>
+		
+		<action name="process*" class="addressProcessController" method="{1}"  >
+			<result name="success" type="redirectAction">
+				<param name="namespace">/address</param>
+				<param name="actionName">tomain</param>
+			</result>
+		</action>
+	
+	</package>
+
+	
+	
+</struts>

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Hibernate, Relational Persistence for Idiomatic Java
+  ~
+  ~ License: GNU Lesser General Public License (LGPL), version 2.1 or later.
+  ~ See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.
+  -->
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.city.car.model" >
+	<!-- 员工映射类 -->
+    <class name="DriverModel" table="driverinfo" >
+      	
+        <id name="dno">
+           <generator class="assigned"></generator>
+        </id>
+          <property name="password" />
+        <property name="dname" />
+        <property name="dsex" />
+        <property name="age" />
+        <property name="dtel" />
+        <property name="photo"/>
+        <property name="filename" />
+        <property name="contextType" />
+        
+       
+      <!-- 映射一对多关联关系 -->
+        <set name="uses"  table="usecar">
+        	<key column="dno" />
+        	<one-to-many class="UseCarModel" />
+        </set>
+       
+        
+      <!-- 映射一对一关联关系 -->
+        <one-to-one name="address" class="AddressModel" cascade="all" lazy="false"/>
+        
+        
+       
+        
+        
+        
+    </class>
+    
+      
+    
+    
+    
+
+</hibernate-mapping>
